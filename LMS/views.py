@@ -21,11 +21,14 @@ def SINGLE_COURSE(request):
     category=Categories.get_all_category(Categories) # type: ignore
     level=Level.objects.all()
     course = Course.objects.all()
-   
+    FeeCourse_count = Course.objects.filter(price=0).count()
+    PaidCourse_count = Course.objects.filter(price__gte=1).count()
     context={
         'category':category,
         'level':level,
         'course':course,
+        'FeeCourse_count':FeeCourse_count,
+        'PaidCourse_count':PaidCourse_count,
     }
     return render(request,'Main/single_course.html',context)
 
@@ -33,7 +36,7 @@ def filter_course(request):
     category = request.GET.getlist('category[]')
     level = request.GET.getlist('level[]')
     price = request.GET.getlist('price[]')
-    
+  
     # print(category)
     if price == ['PriceFree']:
         course = Course.objects.filter(price=0)
