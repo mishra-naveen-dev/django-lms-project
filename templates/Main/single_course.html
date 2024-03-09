@@ -165,19 +165,19 @@
                                 <input type="radio" id="price-1" name="customRadio"
                                     class="custom-control-input filter-checkbox" value="PriceAll" data-filter="price">
                                 <label class="custom-control-label font-size-base" for="price-1">All
-                                    (18)</label>
+                                    ({{course.all.count}})</label>
                             </li>
                             <li class="custom-control custom-radio">
                                 <input type="radio" id="price-2" name="customRadio"
                                     class="custom-control-input  filter-checkbox" value="PriceFree" data-filter="price">
                                 <label class="custom-control-label font-size-base" for="price-2">Free
-                                    (3)</label>
+                                    ({{FeeCourse_count}})</label>
                             </li>
                             <li class="custom-control custom-radio">
                                 <input type="radio" id="price-3" name="customRadio"
                                     class="custom-control-input  filter-checkbox" value="PricePaid" data-filter="price">
                                 <label class="custom-control-label font-size-base" for="price-3">Paid
-                                    (15)</label>
+                                    ({{PaidCourse_count}})</label>
                             </li>
                         </ul>
                     </div>
