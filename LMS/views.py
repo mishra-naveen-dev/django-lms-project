@@ -63,6 +63,9 @@ def CONTACT_US(request):
 def ABOUT_US(request):
     return render(request,'Main/about_us.html')
 
+def SEARCH_COURSE(request):
+    return render(request,'search/search.html')
+
 # def toggle_theme(request):
 #     current_theme = request.session.get('theme', 'light-theme')
 #     new_theme = 'dark-theme' if current_theme == 'light-theme' else 'light-theme'
