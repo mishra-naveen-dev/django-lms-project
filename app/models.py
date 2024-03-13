@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils.text import slugify
 from django.db.models.signals import pre_save
@@ -26,6 +27,12 @@ class Level(models.Model):
 
     def __str__(self):
         return self.name
+class Language(models.Model):
+    language = models.CharField(max_length=100, null=True)
+
+    def __str__(self):
+        return self.language
+
 class Course(models.Model):
     STATUS = (
         ('PUBLISH','PUBLISH'),
@@ -42,12 +49,14 @@ class Course(models.Model):
     description = models.TextField()
     price = models.IntegerField(null=True,default=0)
     discount = models.IntegerField(null=True)
+    language = models.ForeignKey(Language, on_delete=models.CASCADE, null=True)
+    Deadline = models.CharField(max_length=100,null=True)
     slug = models.SlugField(default='', max_length=500, null=True, blank=True)
     status = models.CharField(choices=STATUS,max_length=100,null=True)
-
+    Certificate=models.CharField(null=True,max_length=100)
 
     def __str__(self):
-        return self.title
+         return f"{self.title} - {self.language}"
     def get_absolute_url(self):
         from django.urls import reverse
         return reverse("course_details", kwargs={'slug': self.slug})
@@ -86,3 +95,35 @@ class Requirements(models.Model):
 
     def __str__(self):
         return self.points
+
+
+class Lesson(models.Model):
+    course=models.ForeignKey(Course,on_delete=models.CASCADE)
+    name=models.CharField(max_length=200)
+    
+    def __str__(self):
+        return self.name + " - " + self.course.title
+    
+
+class Video(models.Model):  
+    serial_number = models.IntegerField(null=True)
+    thumbnail=models.ImageField(upload_to="Media/Yt_Thumbnail",null=True)
+    course=models.ForeignKey(Course,on_delete=models.CASCADE)
+    lesson=models.ForeignKey(Lesson,on_delete=models.CASCADE)
+    title=models.CharField(max_length=100)
+    youtube_id = models.CharField(max_length=300)
+    time_duration = models.IntegerField(null=True)
+    preview=models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.title
+
+
+class UserCourse(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    course=models.ForeignKey(Course,on_delete=models.CASCADE)
+    paid=models.BooleanField(default=0)
+    date=models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.first_name + " - " + self.course.title    

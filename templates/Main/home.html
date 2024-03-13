@@ -202,11 +202,21 @@
                                             </ul>
                                         </div>
 
+                                        {% if i.price == 0 %}
+
+
+                                        <div class="col-auto px-2 text-right">
+                                            <del class="h4"><a href="#" class="badge badge-primary">Free</a></del>
+
+                                        </div>
+                                        {% else %}
+
                                         <div class="col-auto px-2 text-right">
                                             <span class="h2"> ₹ {% discount_calculation i.price i.discount %}</span>
                                             <del class="h4">₹ {{i.price}}</del>
 
                                         </div>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>

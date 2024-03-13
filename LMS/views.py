@@ -1,8 +1,9 @@
 from django.shortcuts import redirect,render
-from app.models import Categories,Course,Level
+from app.models import Categories,Course,Level,Video,UserCourse
 from django.template.loader import render_to_string
+from django.contrib import messages
 from django.http import JsonResponse
-
+from django.db.models import Sum
 
 def BASE(request):
     return render(request,'base.html')
@@ -87,8 +88,18 @@ def SEARCH_COURSE(request):
     return render(request,'search/search.html',context)
 
 def COURSE_DETAILS(request,slug):
-    course=Course.objects.filter(slug=slug)
+  
     category=Categories.get_all_category(Categories)
+    time_duration = Video.objects.filter(course__slug=slug).aggregate(sum=Sum('time_duration'))
+
+    course_id=Course.objects.get(slug=slug)
+    course = Course.objects.filter(slug=slug)
+
+    try:
+        check_enroll = UserCourse.objects.get(user=request.user,course=course_id)
+    except UserCourse.DoesNotExist:
+        check_enroll=None    
+
 
     if course.exists():
         course=course.first();
@@ -98,6 +109,8 @@ def COURSE_DETAILS(request,slug):
     context={
         'course':course,
         'category':category,
+        'time_duration':time_duration,
+        'check_enroll':check_enroll,
     }
     return render(request,'course/course_details.html',context)
 
@@ -108,7 +121,29 @@ def PAGE_NOT_FOUND(request):
         'category':category,
     }
     return render(request,'error/404.html',context)    
+def CHECKOUT(request,slug):
+    course=Course.objects.get(slug=slug)
+    
+    
+    if course.price==0:
+        usercourse=UserCourse(
+            user=request.user,
+            course=course
+        )
+        usercourse.save()
+        messages.success(request,'Course has Suceessfully Enrolled !')
+        return redirect('my_course')
+    return render(request,'checkout/checkout.html')
 
+
+def MY_COURSE(request):
+    course=UserCourse.objects.filter(user = request.user)
+
+    context={
+        'course':course,
+    }
+    return render(request,'course/my-course.html',context)
+ 
 # def toggle_theme(request):
 #     current_theme = request.session.get('theme', 'light-theme')
 #     new_theme = 'dark-theme' if current_theme == 'light-theme' else 'light-theme'
