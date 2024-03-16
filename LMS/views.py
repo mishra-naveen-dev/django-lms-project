@@ -130,6 +130,7 @@ def PAGE_NOT_FOUND(request):
 def CHECKOUT(request,slug):
     course=Course.objects.get(slug=slug)
     action=request.GET.get('action')
+    order= None
     
     
     if course.price==0:
@@ -185,7 +186,7 @@ def CHECKOUT(request,slug):
 
     context={
            'course':course,
-           'order':order
+           'order':order,
     }
     
     return render(request,'checkout/checkout.html',context)
