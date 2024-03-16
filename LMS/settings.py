@@ -139,3 +139,7 @@ DEFAULT_FROM_EMAIL = '<anything you want>'
 # settings.py
 # theme
 # STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+
+KEY_ID ="gfvbn"
+KEY_SECRET=""

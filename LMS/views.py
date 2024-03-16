@@ -1,9 +1,15 @@
 from django.shortcuts import redirect,render
-from app.models import Categories,Course,Level,Video,UserCourse
+from app.models import Categories,Course,Level,Video,UserCourse,Payment
 from django.template.loader import render_to_string
 from django.contrib import messages
 from django.http import JsonResponse
 from django.db.models import Sum
+
+# from .settings import *
+import razorpay
+from time import time
+
+# client=razorpay.Client(auth=(KEY_ID,KEY_SECRET))
 
 def BASE(request):
     return render(request,'base.html')
@@ -123,6 +129,7 @@ def PAGE_NOT_FOUND(request):
     return render(request,'error/404.html',context)    
 def CHECKOUT(request,slug):
     course=Course.objects.get(slug=slug)
+    action=request.GET.get('action')
     
     
     if course.price==0:
@@ -133,7 +140,55 @@ def CHECKOUT(request,slug):
         usercourse.save()
         messages.success(request,'Course has Suceessfully Enrolled !')
         return redirect('my_course')
-    return render(request,'checkout/checkout.html')
+    elif action == 'create_payment':
+        if request.method == "POST":
+            first_name=request.POST.get('first_name')
+            last_name=request.POST.get('last_name')   
+            country=request.POST.get('country')
+            address=request.POST.get('address')
+            address_1=request.POST.get('address')
+            city=request.POST.get('city')
+            state=request.POST.get('state')
+            postcode=request.POST.get('postcode')
+            phone=request.POST.get('phone')
+            email=request.POST.get('email')
+            order_comments=request.POST.get('order_comments')
+
+            amount = (course.price) * 100
+            currency="INR"
+            notes={
+                "name":f'{first_name} {last_name}',
+                "country":country,
+                "address":f'{address} {address_1}',
+                "city":city,
+                "state":state,
+                "postcode":postcode,
+                "phone":phone,
+                "email":email,
+                "order_comments":order_comments,
+            }
+            receipt=f"Edu-{int(time())}"
+            order=client.order.create({
+                'receipt':receipt,
+                'amount':amount,
+                'currency':currency,
+                'notes':notes,
+                
+            })
+
+            payment =Payment(
+                course=course,
+                user=request.user,
+                order_id=order.gets('id')
+            )
+            payment.save()
+
+    context={
+           'course':course,
+           'order':order
+    }
+    
+    return render(request,'checkout/checkout.html',context)
 
 
 def MY_COURSE(request):
