@@ -15,7 +15,7 @@ SECRET_KEY = 'django-insecure-o_!k&_2$of(c%ekt_ilix_msbk099(lt7h_#i=n-9^4z$t^l05
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
-CSRF_TRUSTED_ORIGINS = ["https://django-lms-project.onrender.com/"]
+CSRF_TRUSTED_ORIGINS = ["https://django-lms-project.onrender.com", "http://django-lms-project.onrender.com"]
 
 
 # Application definition
