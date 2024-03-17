@@ -204,7 +204,7 @@
 
                                     </div>
                                     {% if check_enroll is not None %}
-                                    <a href="/course/watch-course/{{course.slug}}">
+                                    <a href="/course/watch-course/{{course.id}}">
                                         <div class="ms-4">
                                             {{ video.title }}
                                         </div>
@@ -631,7 +631,7 @@
                         <span class="ms-2">2 days left at this price!</span>
                     </div>
                     {% if check_enroll is None %}
-                    <a class="btn btn-primary btn-block mb-3" href="/checkout/{{course.slug}}">ENROLL</a>
+                    <a class="btn btn-primary btn-block mb-3" href="/checkout/{{course.id}}">ENROLL</a>
                     {% else %}
                     <button class="btn btn-primary btn-block mb-3" disabled>ALREADY
                         ENROLLED</button>
