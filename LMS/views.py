@@ -1,4 +1,4 @@
-from django.shortcuts import redirect,render
+from django.shortcuts import get_object_or_404, redirect,render
 from app.models import Categories,Course,Level,Video,UserCourse,Payment
 from django.template.loader import render_to_string
 from django.contrib import messages
@@ -93,19 +93,20 @@ def SEARCH_COURSE(request):
     }
     return render(request,'search/search.html',context)
 
-def COURSE_DETAILS(request,slug):
+def COURSE_DETAILS(request, course_id):
   
     category=Categories.get_all_category(Categories)
-    time_duration = Video.objects.filter(course__slug=slug).aggregate(sum=Sum('time_duration'))
+    time_duration = Video.objects.filter(course__id=course_id).aggregate(sum=Sum('time_duration'))
 
-    course_id=Course.objects.get(slug=slug)
-    course = Course.objects.filter(slug=slug)
+    course = Course.objects.filter(pk=course_id)
 
     check_enroll = None
     user  = request.user
     if user.is_authenticated:
         try:
-            check_enroll = UserCourse.objects.get(user=request.user,course=course_id)
+            check_enroll = UserCourse.objects.get(
+                user=request.user,course=course_id
+            )
         except UserCourse.DoesNotExist:
             pass   
 
@@ -129,8 +130,8 @@ def PAGE_NOT_FOUND(request):
         'category':category,
     }
     return render(request,'error/404.html',context)    
-def CHECKOUT(request,slug):
-    course=Course.objects.get(slug=slug)
+def CHECKOUT(request, course_id):
+    course=Course.objects.get(pk=course_id)
     action=request.GET.get('action')
     order= None
     
@@ -201,13 +202,11 @@ def MY_COURSE(request):
         'course':course,
     }
     return render(request,'course/my-course.html',context)
-def WATCH_COURSE(request,slug):
-    course=Course.objects.filter(slug=slug).first()
+def WATCH_COURSE(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
     
-    if course is None:
-        return redirect('404')
-    
-    video=Video.objects.filter(course=course.id).first()
+    lecture_number = request.GET.get("lecture", 1)
+    video = Video.objects.get(course=course.id, serial_number=lecture_number)
 
     if video is None:
         return redirect('404')

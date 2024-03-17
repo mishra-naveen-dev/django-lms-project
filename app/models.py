@@ -61,7 +61,7 @@ class Course(models.Model):
          return f"{self.title} - {self.language}"
     def get_absolute_url(self):
         from django.urls import reverse
-        return reverse("course_details", kwargs={'slug': self.slug})
+        return reverse("course_details", kwargs={'course_id': self.id})
 
 def create_slug(instance, new_slug=None):
     slug = slugify(instance.title)
