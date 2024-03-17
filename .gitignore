@@ -2,8 +2,8 @@ __pycache__/
 *.py[cod]
 venv
 staticfiles
-.env
+/venv
 
 #SQLite database
-*.sqlite3
-db.sqlite3
+# *.sqlite3
+# db.sqlite3

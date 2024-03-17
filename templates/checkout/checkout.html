@@ -522,5 +522,31 @@
         </div>
     </div>
 </section>
+{% if order is not None %}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    var options = {
+        "key": "rzp_test_FWigN28YFG5Z8F", // Replace with your Razorpay API key
+        "name": "Edu Online Course",
+        "amount": "{{ order.amount }}",   // Replace with order amount
+        "currency": "INR",
+        "description": "Payment For {{course.title}}",
+        "image": "https://example.com/your_logo",
+        "order_id": "{{ order_id }}",  // Replace with order ID
+        "callback_url": "https://127.0.0.1:8000/verify_payment",
+        "prefill": {
+            "name": "{{ ordeer.notes.name }}",  // Replace with customer's name
+            "email": "{{ order.notes.email }}",  // Replace with customer's email
+            "contact": "{{ order.notes.phone }}",
+            // You can prefill other fields if needed
+        },
+        "theme": {
+            "color": "#F37254"  // Customize theme color if needed
+        }
+        var rzp = new Razorpay(options);
+        rzp.open();
 
+
+</script>
+{% endif %}
 {% endblock %}
