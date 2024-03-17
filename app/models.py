@@ -54,7 +54,9 @@ class Course(models.Model):
     slug = models.SlugField(default='', max_length=500, null=True, blank=True)
     status = models.CharField(choices=STATUS,max_length=100,null=True)
     Certificate=models.CharField(null=True,max_length=100)
+    is_free = models.BooleanField(default=False)  # Indicates whether the course is free or paid
 
+    
     def __str__(self):
          return f"{self.title} - {self.language}"
     def get_absolute_url(self):

@@ -203,10 +203,27 @@
                                         <i class="fab fa-youtube" aria-hidden="true" style="color: red;"></i>
 
                                     </div>
+                                    {% if check_enroll is not None %}
+                                    <a href="/course/watch-course/{{course.slug}}">
+                                        <div class="ms-4">
+                                            {{ video.title }}
+                                        </div>
+                                    </a>
+                                    {% else %}
 
-                                    <div class="ms-4">
-                                        {{video.title}}
+                                    {% if video.preview == True %}
+                                    <a href="https://youtube.com/watch?v={{ video.youtube_id }}"
+                                        class="rounded fancybox" data-fancybox>
+                                        <div class="ms-4 fw-bold">
+                                            {{ video.title }}
+                                        </div>
+                                    </a>
+                                    {% else %}
+                                    <div class="ms-4" data-toggle="tooltip" title="Enroll This Course!">
+                                        {{ video.title }}
                                     </div>
+                                    {% endif %}
+                                    {% endif %}
                                 </div>
                                 <div
                                     class="d-flex align-items-center overflow-auto overflow-md-visible flex-shrink-all">
@@ -214,7 +231,8 @@
                                         question</div> -->
                                     <div class="badge btn-blue-soft me-5 font-size-sm fw-normal py-2">
                                         {{video.time_duration}}</div>
-                                    <a href="{{vedio.youtube_id}}" class="text-secondary d-flex">
+                                    <a href="https://https://youtube.com/watch?v={{vedio.youtube_id}}"
+                                        class="text-secondary d-flex fancybox" data-fancybox>
                                         <!-- Icon -->
                                         <svg width="14" height="16" viewBox="0 0 14 16"
                                             xmlns="http://www.w3.org/2000/svg">
@@ -618,6 +636,29 @@
                     <button class="btn btn-primary btn-block mb-3" disabled>ALREADY
                         ENROLLED</button>
                     {% endif %}
+                    <!-- Modal for Login Prompt -->
+                    <div class="modal" tabindex="-1" role="dialog" id="loginModal">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Login Required</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Please log in to enroll in this course.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <a href="{% url 'doLogin' %}" class="btn btn-primary">Login</a>
+                                    {% csrf_token %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item d-flex align-items-center py-3">
                             <div class="text-secondary d-flex icon-uxs">
@@ -648,6 +689,28 @@
                             <h6 class="mb-0 ms-3 me-auto">Lectures</h6>
                             <span>{{course.video_set.all.count}}</span>
                         </li>
+
+                        <li class="list-group-item d-flex align-items-center py-3" style="background-color:#F7F9FB;">
+                            <div class="text-secondary d-flex icon-uxs">
+                                <!-- Icon -->
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M14.5936 3.78122H7.72003L6.56976 0.320872C6.50607 0.12928 6.32686 0 6.12495 0H1.40624C0.630839 0 0 0.630839 0 1.40624V10.8124C0 11.5878 0.630839 12.2187 1.40624 12.2187H6.57173L7.71263 15.6698C7.77566 15.8719 7.96259 16 8.1604 16C8.1615 16 8.16259 15.9999 8.16369 15.9999H14.5937C15.3691 15.9999 15.9999 15.369 15.9999 14.5936V5.18746C15.9999 4.41206 15.369 3.78122 14.5936 3.78122ZM1.40624 11.2812C1.14777 11.2812 0.937493 11.0709 0.937493 10.8124V1.40624C0.937493 1.14777 1.14777 0.937493 1.40624 0.937493H5.7868L9.22511 11.2812C7.46913 11.2812 3.14004 11.2812 1.40624 11.2812ZM9.14771 12.2187L8.22897 14.2449L7.55913 12.2187H9.14771ZM15.0624 14.5936C15.0624 14.8521 14.8521 15.0624 14.5936 15.0624H8.88768L10.3018 11.9435C10.3525 11.8316 10.3549 11.7077 10.3197 11.6018L8.03166 4.71871H14.5936C14.8521 4.71871 15.0624 4.92899 15.0624 5.18746V14.5936Z"
+                                        fill="currentColor" />
+                                    <path
+                                        d="M6.12497 5.65623H4.71873C4.45986 5.65623 4.24998 5.8661 4.24998 6.12497C4.24998 6.38385 4.45986 6.59372 4.71873 6.59372H5.5756C5.3821 7.13931 4.86107 7.53121 4.24998 7.53121C3.47458 7.53121 2.84374 6.90037 2.84374 6.12497C2.84374 5.34958 3.47458 4.71874 4.24998 4.71874C4.6256 4.71874 4.97873 4.86502 5.24435 5.13061C5.42738 5.31367 5.72419 5.31367 5.90725 5.13061C6.09028 4.94755 6.09028 4.65077 5.90725 4.46771C5.46457 4.02503 4.87601 3.78125 4.24998 3.78125C2.95765 3.78125 1.90625 4.83264 1.90625 6.12497C1.90625 7.4173 2.95765 8.4687 4.24998 8.4687C5.54232 8.4687 6.59371 7.4173 6.59371 6.12497C6.59371 5.8661 6.38384 5.65623 6.12497 5.65623Z"
+                                        fill="currentColor" />
+                                    <path
+                                        d="M13.625 7.53124H12.2187V7.0625C12.2187 6.80362 12.0089 6.59375 11.75 6.59375C11.4911 6.59375 11.2812 6.80362 11.2812 7.0625V7.53124H9.875C9.61612 7.53124 9.40625 7.74112 9.40625 7.99999C9.40625 8.25886 9.61612 8.46874 9.875 8.46874H12.5981C12.449 8.91201 12.1287 9.43735 11.7563 9.94291C11.6761 9.8346 11.5968 9.72376 11.5204 9.61138C11.3748 9.39729 11.0833 9.34176 10.8692 9.48735C10.6551 9.63291 10.5997 9.92447 10.7452 10.1386C10.8767 10.332 11.0146 10.5202 11.152 10.6985C10.9177 10.9702 10.6868 11.2163 10.4842 11.4154C10.2994 11.5967 10.2966 11.8935 10.4779 12.0783C10.6585 12.2623 10.9552 12.2666 11.1408 12.0846C11.157 12.0687 11.4126 11.8169 11.7541 11.4303C12.0873 11.8115 12.3367 12.0621 12.356 12.0814C12.539 12.2644 12.8357 12.2645 13.0188 12.0815C13.2019 11.8985 13.202 11.6017 13.019 11.4186C13.0141 11.4137 12.7271 11.1251 12.3609 10.698C13.0245 9.84029 13.429 9.09314 13.5691 8.46874H13.6249C13.8838 8.46874 14.0937 8.25886 14.0937 7.99999C14.0937 7.74112 13.8839 7.53124 13.625 7.53124Z"
+                                        fill="currentColor" />
+                                </svg>
+
+                            </div>
+                            <h6 class="mb-0 ms-3 me-auto">Enrolled</h6>
+                            <span>{{course.usercourse_set.all.count}} students</span>
+                        </li>
+
                         <li class="list-group-item d-flex align-items-center py-3" style="background-color:#F7F9FB;">
                             <div class="text-secondary d-flex icon-uxs">
                                 <!-- Icon -->
@@ -1155,6 +1218,14 @@
     </div>
 </div>
 
-
+<script>
+    // JavaScript to handle button click event
+    document.getElementById('enrollButton').addEventListener('click', function (event) {
+        // Prevent default behavior of anchor tag
+        event.preventDefault();
+        // Show the login modal
+        $('#loginModal').modal('show');
+    });
+</script>
 
 {% endblock %}

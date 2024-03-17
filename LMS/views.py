@@ -4,7 +4,6 @@ from django.template.loader import render_to_string
 from django.contrib import messages
 from django.http import JsonResponse
 from django.db.models import Sum
-from django.views.decorators.csrf import csrf_exempt
 
 from .settings import *
 import razorpay
@@ -102,11 +101,13 @@ def COURSE_DETAILS(request,slug):
     course_id=Course.objects.get(slug=slug)
     course = Course.objects.filter(slug=slug)
 
-    try:
-        check_enroll = UserCourse.objects.get(user=request.user,course=course_id)
-    except UserCourse.DoesNotExist:
-        check_enroll=None    
-
+    check_enroll = None
+    user  = request.user
+    if user.is_authenticated:
+        try:
+            check_enroll = UserCourse.objects.get(user=request.user,course=course_id)
+        except UserCourse.DoesNotExist:
+            pass   
 
     if course.exists():
         course=course.first();
@@ -200,37 +201,23 @@ def MY_COURSE(request):
         'course':course,
     }
     return render(request,'course/my-course.html',context)
+def WATCH_COURSE(request,slug):
+    course=Course.objects.filter(slug=slug).first()
+    
+    if course is None:
+        return redirect('404')
+    
+    video=Video.objects.filter(course=course.id).first()
 
-@csrf_exempt
-def VERIFY_PAYMENT(request):
-    if request.method == "POST":
-        data=request.POST
-        # print(data)
-        try:
-            client.utility.verify_payment_signature(data)
-            razorpay_order_id=data['razorpay_order_id']
-            razorpay_payment_id=data['razorpay_order_id']
+    if video is None:
+        return redirect('404')
 
-            payment=Payment.objects.get(order_id=razorpay_order_id)
-            payment.payment_id=razorpay_payment_id
-            payment.status=True
-
-            usercourse = UserCourse(
-                user=payment.user,
-                course=payment.course,
-            )
-            usercourse.save()
-            payment.user_course=usercourse
-            payment.save()
-
-            context={
-                'data':data,
-                'payment':payment,
-
-            }
-            return render(request,'verify_payment/success.html',context)
-        except:
-            return render(request,'verify_payment/fail.html')
+    context={
+        'course':course,
+        'video':video,
+        # 'lecture':lecture,
+    }        
+    return render(request, 'course/watch-course.html',context)
 # def toggle_theme(request):
 #     current_theme = request.session.get('theme', 'light-theme')
 #     new_theme = 'dark-theme' if current_theme == 'light-theme' else 'light-theme'
