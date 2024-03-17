@@ -142,15 +142,7 @@ DEFAULT_FROM_EMAIL = '<anything you want>'
 # STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 
-<<<<<<< HEAD
-<<<<<<< Updated upstream
+
 KEY_ID ="rzp_test_FWigN28YFG5Z8F"
 KEY_SECRET="FTsVrJUMVClM61KCmHROLC2Q"
-=======
-KEY_ID ="gfvbn"
-KEY_SECRET=""
->>>>>>> Stashed changes
-=======
-KEY_ID ="gfvbn"
-KEY_SECRET=""
->>>>>>> 9e6eab97571048cf1c2ef1f648c6f6cce5da2b97
+
