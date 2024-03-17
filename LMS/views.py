@@ -4,12 +4,13 @@ from django.template.loader import render_to_string
 from django.contrib import messages
 from django.http import JsonResponse
 from django.db.models import Sum
+from django.views.decorators.csrf import csrf_exempt
 
-# from .settings import *
+from .settings import *
 import razorpay
 from time import time
 
-# client=razorpay.Client(auth=(KEY_ID,KEY_SECRET))
+client=razorpay.Client(auth=(KEY_ID,KEY_SECRET))
 
 def BASE(request):
     return render(request,'base.html')
@@ -180,7 +181,7 @@ def CHECKOUT(request,slug):
             payment =Payment(
                 course=course,
                 user=request.user,
-                order_id=order.gets('id')
+                order_id=order.get('id')
             )
             payment.save()
 
