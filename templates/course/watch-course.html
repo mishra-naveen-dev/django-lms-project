@@ -50,7 +50,10 @@
             </div>
 
             <!-- Back to Course -->
-            <a href="course-single-v1.html" class="btn btn-sm btn-orange ms-md-6 px-6 mb-3 mb-md-0 flex-shrink-0">Back
+            <a href="{% url 'single_course' %}"
+                class="btn btn-sm btn-orange ms-md-6 px-6 mb-3 mb-md-0 flex-shrink-0">Back
+                {% csrf_token %}
+
                 to Course</a>
         </div>
     </div>
