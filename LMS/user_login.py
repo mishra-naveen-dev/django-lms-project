@@ -5,8 +5,6 @@ from app.EmailBackEnd import EmailBackEnd
 from django.contrib.auth import authenticate,login,logout
 
 def REGISTER(request):
-
-    # print(f"The request type is : {request.method}")
     email = None
     password = None
     username = None
@@ -19,7 +17,6 @@ def REGISTER(request):
        if User.objects.filter(email=email).exists():
            messages.warning(request,'Email are Already Exists !')
            return redirect('register')
-
        # check username
        if User.objects.filter(username=username).exists():
            messages.warning(request,'Username are Already exists !')
