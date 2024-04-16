@@ -2,6 +2,9 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils.text import slugify
 from django.db.models.signals import pre_save
+from django.urls import reverse
+
+
 
 # Create your models here.
 
@@ -14,6 +17,15 @@ class Categories(models.Model):
     
     def get_all_category(self):
         return Categories.objects.all().order_by('id')
+class Categoriestheory(models.Model):
+    icon = models.CharField(max_length=200,null=True)
+    name = models.CharField(max_length=200)
+    title = models.CharField(max_length=500, default='default_value_here')
+    def __str__(self):
+        return self.name
+    
+    def get_all_theory(self):
+        return Theory.objects.all().order_by('id') # type: ignore
 class Author(models.Model):
     author_profile = models.ImageField(upload_to="Media/author")
     name = models.CharField(max_length=100, null=True)
@@ -62,6 +74,40 @@ class Course(models.Model):
     def get_absolute_url(self):
         from django.urls import reverse
         return reverse("course_details", kwargs={'course_id': self.id})
+
+# theory courses 
+class File(models.Model):
+    name = models.CharField(max_length=255)
+    file = models.FileField(upload_to='files/')
+
+    def __str__(self):
+        return self.name
+
+# models
+
+
+class CourseResource(models.Model):
+    RESOURCE_TYPE = (
+        ('Note', 'Note'),
+        ('PDF', 'PDF'),
+        ('PPT', 'PPT'),
+    )
+
+    courser = models.ForeignKey(Categoriestheory, on_delete=models.CASCADE)
+    resource_type = models.CharField(choices=RESOURCE_TYPE, max_length=10)
+    title = models.CharField(max_length=500, default='default_value_here')
+    file = models.FileField(upload_to="course_resources/",default='path/to/default/file.pdf')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    #   @classmethod
+    def get_all_category(cls):
+        return cls.objects.all()
+    
+    def __str__(self):
+        return f"{self.title} - {self.resource_type} for {self.courser.title}"
+
+
+
+
 
 def create_slug(instance, new_slug=None):
     slug = slugify(instance.title)
