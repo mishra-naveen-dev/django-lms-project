@@ -20,11 +20,11 @@ For accessing the any course free or paid user should have to first login for th
 
 ![squence2](https://github.com/mishra-naveen-dev/django-lms-project/assets/152160092/d37c0852-5b72-4548-94cf-3780d889f349)
 
-``User Interface ``
+###``User Interface ``
 ![home1ss](https://github.com/mishra-naveen-dev/django-lms-project/assets/152160092/b3b02b22-436f-447b-9e35-4f76cda4cef1)
 
 ![singupimg](https://github.com/mishra-naveen-dev/django-lms-project/assets/152160092/4f98c647-e64f-4f0d-980d-27eb845783c2)
-![coursescontentandtopicsjpg](https://github.com/mishra-naveen-dev/django-lms-project/assets/152160092/ceab3049-3ac9-4e3d-ab43-5e3b0442e90d)
+
 
    ![loginwrongimg](https://github.com/mishra-naveen-dev/django-lms-project/assets/152160092/bbccda0d-c22d-4f6f-a2ab-0e94617e1175)
 
