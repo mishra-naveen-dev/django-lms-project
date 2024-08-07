@@ -1,37 +1,41 @@
 from django.shortcuts import get_object_or_404, redirect,render
-from app.models import Categories,Course,Level,Video,UserCourse,Payment
+from app.models import Categories,Course,Level,Video,UserCourse,Payment,TheoryCourse
 from django.template.loader import render_to_string
 from django.contrib import messages
 from django.http import JsonResponse
 from django.db.models import Sum
 
 from .settings import *
-import razorpay
+# import razorpay
 from time import time
 
-client=razorpay.Client(auth=(KEY_ID,KEY_SECRET))
+# client=razorpay.Client(auth=(KEY_ID,KEY_SECRET))
 
 def BASE(request):
     return render(request,'base.html')
 
 def HOME(request):
     category=Categories.objects.all().order_by('id')[0:6]
+    # theory=Theory.objects.all().order_by('id')[0:6]
     course=Course.objects.filter(status='PUBLISH').order_by('-id')
-    print(course)
+    # print(course)
     context={
         'category':category,
         'course':course,
+        # 'theory':theory
     }
     return render(request,'Main/home.html',context)
 
 def SINGLE_COURSE(request):
     category=Categories.get_all_category(Categories) # type: ignore
+    # theory=Theory.get_all_category(Theory)
     level=Level.objects.all()
     course = Course.objects.all()
     FeeCourse_count = Course.objects.filter(price=0).count()
     PaidCourse_count = Course.objects.filter(price__gte=1).count()
     context={
         'category':category,
+        # 'theory':theory,
         'level':level,
         'course':course,
         'FeeCourse_count':FeeCourse_count,
@@ -85,11 +89,13 @@ def ABOUT_US(request):
 def SEARCH_COURSE(request):
     query = request.GET['query']
     course = Course.objects.filter(title__icontains = query)
+    tcourse = TheoryCourse.objects.filter(title__icontains = query)
     category=Categories.get_all_category(Categories)
    
     context = {
         'course':course,
         'category':category,
+        'tcourse ':tcourse ,
     }
     return render(request,'search/search.html',context)
 
