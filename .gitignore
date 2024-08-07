@@ -2,6 +2,9 @@ __pycache__/
 **/__pycache__/
 *.py[cod]
 *$py.class
+*.pyc
+*.pyo
+*.pyd
 .venv
 venv
 staticfiles
@@ -10,3 +13,5 @@ staticfiles
 #SQLite database
 # *.sqlite3
 # db.sqlite3
+
+
